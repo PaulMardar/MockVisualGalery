@@ -9,6 +9,9 @@ namespace BACKEND
     {
         public static void Main(string[] args)
         {
+
+            IRepository<User> userRepo = new MemoryRepository<User>();
+
             IRepository<Photo> photoRepo = new MemoryRepository<Photo>();
 
             // Read the file's bytes once and store them directly on the entity
