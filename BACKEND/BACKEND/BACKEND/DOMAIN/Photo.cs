@@ -4,11 +4,13 @@ using System.Text;
 
 namespace BACKEND.DOMAIN
 {
-    public class User : IEntity
+    public class Photo : IEntity
     {
         public int Id { get; set; }
-        public string Email { get; set; } = string.Empty;
-        public string PasswordHash { get; set; } = string.Empty;
+
+        public string Url { get; set; } = string.Empty;
+        public (int length, int width) Dimensions { get; set; } = (0, 0);
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     }
 }
