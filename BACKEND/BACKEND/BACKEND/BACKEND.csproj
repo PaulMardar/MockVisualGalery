@@ -10,7 +10,6 @@
   <ItemGroup>
     <Folder Include="ENDPOINTS\" />
     <Folder Include="SERVICES\" />
-    <Folder Include="REPOSITORY\" />
   </ItemGroup>
 
 </Project>
