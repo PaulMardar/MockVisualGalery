@@ -7,4 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="ENDPOINTS\" />
+    <Folder Include="SERVICES\" />
+    <Folder Include="REPOSITORY\" />
+  </ItemGroup>
+
 </Project>
