@@ -11,8 +11,10 @@ namespace BACKEND.DOMAIN
         public string Name { get; set; } = string.Empty;
         public (int length, int width) Dimensions { get; set; } = (0, 0);
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public List<string> Tags{ get; set; } = new List<string>();
+        public List<string> Tags { get; set; } = new List<string>();
         public string Extension { get; set; } = string.Empty;
+        public byte[] Content { get; set; } = Array.Empty<byte>();
+
         public Photo() { }
         public Photo(int id, string name, (int length, int width) dimensions, List<string> tags)
         {
@@ -23,3 +25,4 @@ namespace BACKEND.DOMAIN
         }
     }
 }
+
