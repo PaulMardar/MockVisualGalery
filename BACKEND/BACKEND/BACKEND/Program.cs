@@ -9,7 +9,6 @@ namespace BACKEND
     {
         public static void Main(string[] args)
         {
-
             IRepository<User> userRepo = new MemoryRepository<User>();
 
             IRepository<Photo> photoRepo = new MemoryRepository<Photo>();
@@ -28,10 +27,5 @@ namespace BACKEND
             Console.WriteLine($"Stored photo: Id={fetched?.Id}, Name={fetched?.Name}.{fetched?.Extension}, Bytes={fetched?.Content.Length}");
 
         }
-
-
-
-
-
     }
 }

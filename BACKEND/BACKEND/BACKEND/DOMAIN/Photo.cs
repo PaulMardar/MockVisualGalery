@@ -14,7 +14,7 @@ namespace BACKEND.DOMAIN
         public List<string> Tags { get; set; } = new List<string>();
         public string Extension { get; set; } = string.Empty;
         public byte[] Content { get; set; } = Array.Empty<byte>();
-
+        public int OwnerId { get; set; } = -1;
         public Photo() { }
         public Photo(int id, string name, (int length, int width) dimensions, List<string> tags)
         {

@@ -1,0 +1,12 @@
+﻿using BACKEND.DOMAIN;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BACKEND.SERVICES.Interfaces
+{
+    public interface IUserService : IService<User>
+    {
+        User Register(string name, string email, string passwordHash);
+    }
+}
