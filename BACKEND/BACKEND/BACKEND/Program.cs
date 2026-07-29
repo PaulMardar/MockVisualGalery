@@ -1,6 +1,4 @@
-﻿
-
-using BACKEND.DOMAIN;
+﻿using BACKEND.DOMAIN.Objects;
 using BACKEND.REPOSITORY;
 using BACKEND.SERVICES;
 using BACKEND.SERVICES.Interfaces;
@@ -25,7 +23,6 @@ namespace BACKEND
 
             foreach (var user in userService.GetAll())
                 Console.WriteLine($"  Id={user.Id}, Name={user.Name}, Email={user.Email}");
-
 
             // ---- Add photos ----
             Console.WriteLine("\n=== Adding Photos ===");
@@ -65,13 +62,6 @@ namespace BACKEND
             PrintPhotoTags(photoService, sunsetPhoto.Id, "sunset.jpg");
             PrintPhotoTags(photoService, mountainPhoto.Id, "mountain.png");
             PrintPhotoTags(photoService, cityPhoto.Id, "city.jpg");
-
-
-
-
-
-
-
         }
         private static void PrintPhotoTags(IPhotoService photoService, int photoId, string label)
         {

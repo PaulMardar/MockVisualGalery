@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BACKEND.DOMAIN
+namespace BACKEND.DOMAIN.Objects
 {
     public interface IEntity
     {

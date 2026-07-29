@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
-namespace BACKEND.DOMAIN
+namespace BACKEND.DOMAIN.Objects
 {
     public class Photo : IEntity
     {
