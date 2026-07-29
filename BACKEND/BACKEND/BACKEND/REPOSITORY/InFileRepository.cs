@@ -13,7 +13,8 @@ namespace BACKEND.REPOSITORY
         private readonly object _lock = new();
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
-            WriteIndented = true
+            WriteIndented = true,
+            IncludeFields = true
         };
 
         public InFileRepository() : this(Path.Combine(AppContext.BaseDirectory, "DATA"))

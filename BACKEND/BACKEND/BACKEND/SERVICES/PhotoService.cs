@@ -23,7 +23,7 @@ namespace BACKEND.SERVICES
                 throw new ArgumentException("File name must include a name and extension, e.g. 'REVELION2025.jpg'.", nameof(fileName));
             if (content is null || content.Length == 0)
                 throw new ArgumentException("Photo content cannot be empty.", nameof(content));
-            var photo = new Photo(0, fileName, dimensions, tags ?? new List<string>())  {Content = content };
+            var photo = new Photo(0, fileName, dimensions.length, dimensions.width, tags)  {Content = content };
             return Add(photo);
         }
 

@@ -55,7 +55,7 @@ namespace BACKEND.ENDPOINTS
                     Id = request.Id,
                     Name = request.Name,
                     Extension = request.Extension,
-                    Dimensions = (request.Length, request.Width),
+                    Dimensions = new Dimensions { Length = request.Length, Width = request.Width },
                     Tags = request.Tags,
                     Content = request.Content,
                     OwnerId = request.OwnerId
@@ -151,8 +151,8 @@ namespace BACKEND.ENDPOINTS
             Id = photo.Id,
             Name = photo.Name,
             Extension = photo.Extension,
-            Length = photo.Dimensions.length,
-            Width = photo.Dimensions.width,
+            Length = photo.Dimensions.Length,
+            Width = photo.Dimensions.Width,
             Tags = photo.Tags,
             CreatedAt = photo.CreatedAt,
             OwnerId = photo.OwnerId

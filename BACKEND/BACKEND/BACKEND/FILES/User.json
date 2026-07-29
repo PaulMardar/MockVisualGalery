@@ -12,12 +12,5 @@
     "Email": "curajosi@luptam.com",
     "PasswordHash": "forta",
     "CreatedAt": "2026-07-29T22:26:55.8071032Z"
-  },
-  {
-    "Id": 3,
-    "Name": "Mihai Viteazu",
-    "Email": "curajosi\u002B123@luptam.com",
-    "PasswordHash": "forta",
-    "CreatedAt": "2026-07-29T22:27:11.1562501Z"
   }
 ]

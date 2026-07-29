@@ -38,10 +38,10 @@ namespace BACKEND
             //            is enforced. Handy for local development.
             builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("Jwt"));
 
-            var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JWTOptions>() ?? new JWTOptions();
-            var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>() ?? new AuthOptions();
+            var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JWTOptions>();
+            var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();
 
-            Console.WriteLine($"[DEBUG] SigningKey length = {jwtOptions.SigningKey?.Length ?? -1}");
+            Console.WriteLine($"[DEBUG] SigningKey length = {jwtOptions.SigningKey?.Length}");
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -83,13 +83,6 @@ namespace BACKEND
 
             var app = builder.Build();
 
-            // --- Seed data ---------------------------------------------------------
-            // Uses app.Services (the container the app itself runs on) instead of a
-            // separate BuildServiceProvider() call, which would spin up a second,
-            // never-disposed DI container (ASP0000).
-            // Guarded with GetByEmail because InFileRepository persists to disk -
-            // without this check, Add() throws "id already exists" on every restart
-            // after the first one.
             var userRepository = app.Services.GetRequiredService<IRepository<User>>();
 
             // --- Middleware ---------------------------------------------------------
@@ -110,7 +103,6 @@ namespace BACKEND
             app.MapPhotoEndpoints(authOptions.Enabled);
 
             app.Run();
-
         }
     }
 }
