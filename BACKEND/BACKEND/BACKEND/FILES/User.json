@@ -5,5 +5,19 @@
     "Email": "Ion@admin.com",
     "PasswordHash": "password",
     "CreatedAt": "2026-07-29T20:05:01.2122112Z"
+  },
+  {
+    "Id": 2,
+    "Name": "Mihai Viteazu",
+    "Email": "curajosi@luptam.com",
+    "PasswordHash": "forta",
+    "CreatedAt": "2026-07-29T22:26:55.8071032Z"
+  },
+  {
+    "Id": 3,
+    "Name": "Mihai Viteazu",
+    "Email": "curajosi\u002B123@luptam.com",
+    "PasswordHash": "forta",
+    "CreatedAt": "2026-07-29T22:27:11.1562501Z"
   }
 ]

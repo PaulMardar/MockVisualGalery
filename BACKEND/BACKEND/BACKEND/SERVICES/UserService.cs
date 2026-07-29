@@ -27,13 +27,17 @@ namespace BACKEND.SERVICES
             if (_userRepository.GetAll().Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
                 throw new InvalidOperationException($"A user with email '{email}' already exists.");
 
-            var user = new User { Name = name, Email = email, PasswordHash = passwordHash};
+            var user = new User { Name = name, Email = email, PasswordHash = passwordHash };
 
             return Add(user);
         }
         public User Add(User entity) => _userRepository.Add(entity);
 
         public User? GetById(int id) => _userRepository.GetById(id);
+
+        public User? GetByEmail(string email) =>
+            _userRepository.GetAll()
+                .FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
 
         public IEnumerable<User> GetAll() => _userRepository.GetAll();
         public bool Delete(int id) => _userRepository.Delete(id);

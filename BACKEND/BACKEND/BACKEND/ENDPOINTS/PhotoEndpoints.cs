@@ -13,9 +13,15 @@ namespace BACKEND.ENDPOINTS
 {
     public static class PhotoEndpoints
     {
-        public static IEndpointRouteBuilder MapPhotoEndpoints(this IEndpointRouteBuilder app)
+        // authEnabled comes from the "Auth:Enabled" config switch (see Program.cs).
+        // Unlike UserEndpoints, nothing in this group needs to stay anonymous -
+        // photos are only reachable once you're logged in.
+        public static IEndpointRouteBuilder MapPhotoEndpoints(this IEndpointRouteBuilder app, bool authEnabled)
         {
             var group = app.MapGroup("/api/photos").WithTags("Photos");
+
+            if (authEnabled)
+                group.RequireAuthorization();
 
             // POST /api/photos/upload -> PhotoService.Upload
             // "Content" in the request body is a base64 string that System.Text.Json

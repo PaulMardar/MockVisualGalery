@@ -1,6 +1,8 @@
 ﻿using BACKEND.DOMAIN;
 using BACKEND.DOMAIN.DTOS;
 using BACKEND.DOMAIN.Objects;
+using BACKEND.SERVICES;
+using BACKEND.SERVICES.AUTH;
 using BACKEND.SERVICES.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -8,23 +10,28 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace BACKEND.ENDPOINTS
 {
     public static class UserEndpoints
     {
-        public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder app)
+        // authEnabled comes from the "Auth:Enabled" config switch (see Program.cs).
+        // When true, every route in this group requires a valid access token
+        // except /register, which has to stay reachable so new accounts can be
+        // created in the first place.
+        public static IEndpointRouteBuilder MapUserEndpoints(this IEndpointRouteBuilder app, bool authEnabled)
         {
             var group = app.MapGroup("/api/users").WithTags("Users");
+
+            if (authEnabled)
+                group.RequireAuthorization();
 
             // POST /api/users/register  -> UserService.Register
             group.MapPost("/register", (RegisterUserRequest request, IUserService userService) =>
             {
                 try
                 {
-                    var passwordHash = HashPassword(request.Password);
+                    var passwordHash = PasswordHasher.Hash(request.Password);
                     var user = userService.Register(request.Name, request.Email, passwordHash);
                     return Results.Created($"/api/users/{user.Id}", ToDto(user));
                 }
@@ -39,6 +46,7 @@ namespace BACKEND.ENDPOINTS
             })
             .WithName("RegisterUser")
             .WithSummary("Registers a new user")
+            .AllowAnonymous()
             .Produces<UserDto>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status409Conflict);
@@ -101,14 +109,5 @@ namespace BACKEND.ENDPOINTS
             Email = user.Email,
             CreatedAt = user.CreatedAt
         };
-
-        // Simple placeholder hashing so the endpoint has something to pass as
-        // "passwordHash". Swap this for a real algorithm (e.g. BCrypt.Net,
-        // ASP.NET Core Identity's PasswordHasher<T>) before shipping to production.
-        private static string HashPassword(string password)
-        {
-            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(bytes);
-        }
     }
 }
