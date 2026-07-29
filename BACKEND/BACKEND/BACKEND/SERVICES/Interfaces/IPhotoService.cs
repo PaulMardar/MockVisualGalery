@@ -9,5 +9,6 @@ namespace BACKEND.SERVICES.Interfaces
     {
         Photo Upload(string fileName, (int length, int width) dimensions, List<string> tags, byte[] content);
         bool AddTag(int id, string tag);
+        bool RemoveTag(int id, string tag);
     }
 }

@@ -31,13 +31,11 @@ namespace BACKEND.SERVICES
 
             return Add(user);
         }
-
         public User Add(User entity) => _userRepository.Add(entity);
 
         public User? GetById(int id) => _userRepository.GetById(id);
 
         public IEnumerable<User> GetAll() => _userRepository.GetAll();
-
         public bool Delete(int id) => _userRepository.Delete(id);
     }
 }
