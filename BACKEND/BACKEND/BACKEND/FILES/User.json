@@ -1,0 +1,9 @@
+[
+  {
+    "Id": 1,
+    "Name": "Ion",
+    "Email": "Ion@admin.com",
+    "PasswordHash": "password",
+    "CreatedAt": "2026-07-29T20:05:01.2122112Z"
+  }
+]

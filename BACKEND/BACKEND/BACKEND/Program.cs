@@ -6,6 +6,7 @@ using BACKEND.SERVICES.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using static System.Net.WebRequestMethods;
 
 namespace BACKEND
 {
@@ -23,10 +24,10 @@ namespace BACKEND
             // builder.Services.AddSingleton<IRepository<Photo>, MemoryRepository<Photo>>();
 
             builder.Services.AddSingleton<IRepository<User>>(
-                new InFileRepository<User>(Path.Combine(builder.Environment.ContentRootPath, "Data")));
+                new InFileRepository<User>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
 
             builder.Services.AddSingleton<IRepository<Photo>>(
-                new InFileRepository<Photo>(Path.Combine(builder.Environment.ContentRootPath, "Data")));
+                new InFileRepository<Photo>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
 
 
             // Domain services
@@ -39,13 +40,14 @@ namespace BACKEND
             var userRepository = ServiceProvider.GetRequiredService<IRepository<User>>();
 
             // Add some data
-            userRepository.Add(new User
+           /* userRepository.Add(new User
             {
                 Id = 1,
-                Email = "admin@example.com",
+                Name = "Ion",
+                Email = "Ion@admin.com",
                 PasswordHash = "hashed-password",
                 CreatedAt = DateTime.UtcNow
-            });
+            });*/
 
 
             var app = builder.Build();
