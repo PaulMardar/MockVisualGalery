@@ -7,7 +7,7 @@ namespace BACKEND.REPOSITORY
 {
     public class MemoryRepository<T> : IRepository<T> where T : IEntity
     {
-        private readonly Dictionary<int, T> _items = new();
+        private Dictionary<int, T> _items = new();
         private int _nextId = 1;
 
         public T? GetById(int id)
@@ -22,7 +22,7 @@ namespace BACKEND.REPOSITORY
 
         public T Add(T entity)
         {
-            if (entity.Id == 0)
+            if (entity.Id <= 0)
             {
                 entity.Id = _nextId++;
             }
@@ -31,7 +31,7 @@ namespace BACKEND.REPOSITORY
                 _nextId = entity.Id + 1;
             }
 
-            _items[entity.Id] = entity;
+            _items.Add(entity.Id, entity);
             return entity;
         }
 
