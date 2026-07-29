@@ -19,8 +19,15 @@ namespace BACKEND
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddSingleton<IRepository<User>, MemoryRepository<User>>();
-            builder.Services.AddSingleton<IRepository<Photo>, MemoryRepository<Photo>>();
+            // builder.Services.AddSingleton<IRepository<User>, MemoryRepository<User>>();
+            // builder.Services.AddSingleton<IRepository<Photo>, MemoryRepository<Photo>>();
+
+            builder.Services.AddSingleton<IRepository<User>>(
+                new InFileRepository<User>(Path.Combine(builder.Environment.ContentRootPath, "Data")));
+
+            builder.Services.AddSingleton<IRepository<Photo>>(
+                new InFileRepository<Photo>(Path.Combine(builder.Environment.ContentRootPath, "Data")));
+
 
             // Domain services
 
