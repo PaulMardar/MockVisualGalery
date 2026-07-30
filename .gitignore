@@ -49,6 +49,7 @@ TestResults/
 
 # Local app settings/secrets
 appsettings.Local.json
+appsettings.json
 secrets.json
 *.env
 
