@@ -1,7 +1,6 @@
-﻿using BACKEND.DOMAIN.DTOS;
+﻿using BACKEND.DOMAIN;
 using BACKEND.DOMAIN.Objects;
 using BACKEND.REPOSITORY;
-using BACKEND.SERVICES.AUTH.Interfaces;
 using BACKEND.SERVICES.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,21 @@ using System.Text;
 
 namespace BACKEND.SERVICES.AUTH
 {
+    public interface IAuthService
+    {
+        AuthResponse? Login(string email, string passwordHash);
+
+        AuthResponse? Refresh(string refreshToken);
+        bool Logout(string refreshToken);
+    }
+    public class PasswordHasher
+    {
+        public static string Hash(string password)
+        {
+            // TODO: Hash password with salt and return the hashed password
+            return password;
+        }
+    }
     public class AuthService : IAuthService
     {
         private readonly IUserService _userService;

@@ -7,6 +7,12 @@ using System.Text;
 
 namespace BACKEND.SERVICES
 {
+
+    public interface IUserService : IService<User>
+    {
+        User Register(string name, string email, string passwordHash);
+        User? GetByEmail(string email);
+    }
     public class UserService : IUserService
     {
         private IRepository<User> _userRepository;

@@ -1,6 +1,5 @@
-﻿using BACKEND.DOMAIN.DTOS;
+﻿using BACKEND.DOMAIN;
 using BACKEND.SERVICES.AUTH;
-using BACKEND.SERVICES.AUTH.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;

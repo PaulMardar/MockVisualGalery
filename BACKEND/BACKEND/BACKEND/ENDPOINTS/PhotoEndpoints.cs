@@ -1,12 +1,14 @@
 ﻿using BACKEND.DOMAIN;
-using BACKEND.DOMAIN.DTOS;
 using BACKEND.DOMAIN.Objects;
+using BACKEND.SERVICES;
 using BACKEND.SERVICES.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace BACKEND.ENDPOINTS
@@ -26,15 +28,23 @@ namespace BACKEND.ENDPOINTS
             // POST /api/photos/upload -> PhotoService.Upload
             // "Content" in the request body is a base64 string that System.Text.Json
             // decodes into a byte[] automatically.
-            group.MapPost("/upload", (UploadPhotoRequest request, IPhotoService photoService) =>
+            group.MapPost("/upload", async ([FromForm] UploadPhotoForm form, IPhotoService photoService) =>
             {
+                if (form.File is null || form.File.Length == 0)
+                    return Results.BadRequest(new { error = "A file must be provided." });
+
                 try
                 {
-                    var photo = photoService.Upload(
-                        request.FileName,
-                        (request.Length, request.Width),
-                        request.Tags,
-                        request.Content);
+                    using var ms = new MemoryStream();
+                    await form.File.CopyToAsync(ms);
+                    var content = ms.ToArray();
+
+                    var tags = string.IsNullOrWhiteSpace(form.Tags)
+                        ? new List<string>()
+                        : form.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                   .ToList();
+
+                    var photo = photoService.Upload(form.File.FileName, (form.Length, form.Width), tags, content);
                     return Results.Created($"/api/photos/{photo.Id}", ToDto(photo));
                 }
                 catch (ArgumentException ex)
@@ -42,8 +52,10 @@ namespace BACKEND.ENDPOINTS
                     return Results.BadRequest(new { error = ex.Message });
                 }
             })
+            .DisableAntiforgery()   // this is a JSON/multipart API, not a browser form post
             .WithName("UploadPhoto")
-            .WithSummary("Uploads a new photo")
+            .WithSummary("Uploads a new photo as multipart/form-data")
+            .Accepts<UploadPhotoForm>("multipart/form-data")
             .Produces<PhotoDto>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 

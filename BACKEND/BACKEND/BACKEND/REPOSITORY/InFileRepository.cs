@@ -7,6 +7,15 @@ using System.Text.Json;
 
 namespace BACKEND.REPOSITORY
 {
+    public interface IRepository<T> where T : IEntity
+    {
+        T? GetById(int id);
+        IEnumerable<T> GetAll();
+        T Add(T entity);
+        bool Update(T entity);
+        bool Delete(int id);
+    }
+
     public class InFileRepository<T> : IRepository<T> where T : IEntity
     {
         private readonly string _filePath;

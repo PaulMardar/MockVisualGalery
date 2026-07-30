@@ -1,6 +1,5 @@
 ﻿using BACKEND.CONFIGURATION;
 using BACKEND.DOMAIN.Objects;
-using BACKEND.SERVICES.AUTH.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,6 +10,18 @@ using System.Text;
 
 namespace BACKEND.SERVICES.AUTH
 {
+    public interface ITokenService
+    {
+        // Signed, short-lived JWT carrying the user's identity claims.
+        string GenerateAccessToken(User user);
+
+        // Opaque, high-entropy random string. Not a JWT - it's just a lookup
+        // key into the RefreshToken table, which is what makes revocation possible.
+        string GenerateRefreshTokenValue();
+
+        int AccessTokenMinutes { get; }
+        int RefreshTokenDays { get; }
+    }
     public class TokenService : ITokenService
     {
         private JWTOptions _options;
