@@ -3,9 +3,9 @@ namespace BACKEND.REPOSITORY
 {
     public interface IPhotoFileStorage
     {
-        void Save(int photoId, string extension, byte[] content);
-        byte[]? Read(int photoId, string extension);
-        bool Delete(int photoId, string extension);
+        void Save(string key, string extension, byte[] content);
+        byte[]? Read(string key, string extension);
+        bool Delete(string key, string extension);
     }
 
     public class PhotoFileStorage : IPhotoFileStorage
@@ -18,21 +18,21 @@ namespace BACKEND.REPOSITORY
             Directory.CreateDirectory(_directory);
         }
 
-        private string GetPath(int photoId, string extension) =>
-            Path.Combine(_directory, $"{photoId}.{extension.TrimStart('.')}");
+        private string GetPath(string key, string extension) =>
+            Path.Combine(_directory, $"{key}.{extension.TrimStart('.')}");
 
-        public void Save(int photoId, string extension, byte[] content) =>
-            File.WriteAllBytes(GetPath(photoId, extension), content);
+        public void Save(string key, string extension, byte[] content) =>
+            File.WriteAllBytes(GetPath(key, extension), content);
 
-        public byte[]? Read(int photoId, string extension)
+        public byte[]? Read(string key, string extension)
         {
-            var path = GetPath(photoId, extension);
+            var path = GetPath(key, extension);
             return File.Exists(path) ? File.ReadAllBytes(path) : null;
         }
 
-        public bool Delete(int photoId, string extension)
+        public bool Delete(string key, string extension)
         {
-            var path = GetPath(photoId, extension);
+            var path = GetPath(key, extension);
             if (!File.Exists(path)) return false;
             File.Delete(path);
             return true;

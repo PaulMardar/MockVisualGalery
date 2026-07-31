@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
@@ -23,11 +24,11 @@ namespace BACKEND
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // --- Services ---------------------------------------------------------
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("Jwt"));
+            builder.Services.Configure<S3Options>(builder.Configuration.GetSection("S3"));
 
             var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JWTOptions>();
             var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();
@@ -52,21 +53,35 @@ namespace BACKEND
 
             builder.Services.AddAuthorization();
 
-            // --- Repositories -------------------------------------------------------
-            // builder.Services.AddSingleton<IRepository<User>, MemoryRepository<User>>();
-            // builder.Services.AddSingleton<IRepository<Photo>, MemoryRepository<Photo>>();
-
             builder.Services.AddSingleton<IRepository<User>>(new InFileRepository<User>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
 
-            builder.Services.AddSingleton<IRepository<Photo>>( new InFileRepository<Photo>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
+            builder.Services.AddSingleton<IRepository<Photo>>(new InFileRepository<Photo>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
 
-            builder.Services.AddSingleton<IRepository<RefreshToken>>( new InFileRepository<RefreshToken>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
+            builder.Services.AddSingleton<IRepository<RefreshToken>>(new InFileRepository<RefreshToken>(Path.Combine("D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES")));
 
             // Domain services
             var filesRoot = "D:/PROJECT_TESTARE/MockVisualGalery/BACKEND/BACKEND/BACKEND/FILES";
+
+            // --- Photo file storage: always local disk, optionally also synced to S3 ---
+            // "S3:Enabled" in appsettings.json is the single on/off switch. Local
+            // disk is always written to and is always the read path; when the
+            // switch is true, every save/delete is additionally mirrored to the
+            // configured S3 bucket.
+            bool s3SyncEnabled = builder.Configuration.GetValue<bool>("S3:Enabled");
+
             var photosDir = Path.Combine(filesRoot, "Photos");
 
-            builder.Services.AddSingleton<IPhotoFileStorage>(new PhotoFileStorage(photosDir));
+            builder.Services.AddSingleton<IPhotoFileStorage>(sp =>
+            {
+                var local = new PhotoFileStorage(photosDir);
+
+                if (!s3SyncEnabled)
+                    return local;
+
+                var s3Options = sp.GetRequiredService<IOptions<S3Options>>();
+                var s3 = new S3PhotoFileStorage(s3Options);
+                return new SyncedPhotoFileStorage(local, s3);
+            });
 
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IPhotoService, PhotoService>();
